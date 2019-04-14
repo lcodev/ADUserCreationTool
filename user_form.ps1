@@ -121,6 +121,18 @@ $WPFcu_bttn.add_click({
     {
         [System.Windows.MessageBox]::Show("Account <$username> already exists!`nTry a different username.")
     } else {
+        $default_password = ConvertTo-SecureString -String 'B33b0p@!' -AsPlainText -Force
+        $params = @{
+            Givenname           = $WPFfn_txt.Text
+            Surname             = $WPFln_txt.Text
+            Name                = $WPFcn_txt.Text
+            DisplayName         = $WPFdp_txt.Text
+            SamAccountName      = $WPFun_txt.Text
+            UserPrincipalName   = $WPFem_txt.Text
+            Enabled             = $true
+            AccountPassword     = $default_password
+        }
+        New-ADUser @params -Credential $adm
         [System.Windows.MessageBox]::Show("Account <$username> has been created")
     }
 })
