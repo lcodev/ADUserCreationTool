@@ -88,7 +88,11 @@ $WPFln_txt.add_textchanged({ Set-DisplayName $WPFln_txt $_ })
 # The function sets a username based on the data already entered
 # once the username is generated, it is checked against active directory to ensure username doesn't already exist
 $WPFcu_bttn.add_click({
-    $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + "1"
+    if ($WPFmi_txt.Text) {
+        $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+    } else {
+        $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + "1"
+    }
 })
 
 
