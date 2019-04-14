@@ -109,14 +109,19 @@ $WPFck_bttn.add_click({
 # Button functionality to check account for duplicates and create the account
 $WPFcu_bttn.add_click({
     $username = $WPFun_txt.Text
-    $account = Get-ADUser -Identity $username -credential $adm -ErrorAction SilentlyContinue
+    try {
+        $account = Get-ADUser -Identity $username -Credential $adm -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-Output "no user"
+    }
     
     # Check if account exists
     if ($account)
     {
-        [System.Windows.MessageBox]::Show("Account $username already exists")
+        [System.Windows.MessageBox]::Show("Account <$username> already exists!`nTry a different username.")
     } else {
-        [System.Windows.MessageBox]::Show("Account $username has been created")
+        [System.Windows.MessageBox]::Show("Account <$username> has been created")
     }
 })
 
