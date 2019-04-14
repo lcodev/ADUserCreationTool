@@ -20,7 +20,12 @@ $xaml = @"
         <TextBox x:Name="dp_txt" HorizontalAlignment="Left" Height="23" Margin="247,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="163"/>
         <Image x:Name="image" HorizontalAlignment="Left" Height="73" Margin="133,39,0,0" VerticalAlignment="Top" Width="71" Source="C:\Users\lco\Google Drive\PowerShell\guiapps\images\ps.png"/>
         <Label x:Name="main_lbl" Content="User Creation Form" HorizontalAlignment="Left" Margin="222,61,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-        <Button x:Name="cu_bttn" Content="Create User Account" HorizontalAlignment="Left" Margin="290,262,0,0" VerticalAlignment="Top" Width="120" Height="28"/>
+        <Button x:Name="cu_bttn" Content="Create User Account" HorizontalAlignment="Left" Margin="290,319,0,0" VerticalAlignment="Top" Width="120" Height="28"/>
+        <Label x:Name="cn_lbl" Content="CN/Common Name:" HorizontalAlignment="Left" Margin="120,236,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="em_lbl" Content="Email:" HorizontalAlignment="Left" Margin="247,236,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="cn_txt" HorizontalAlignment="Left" Height="23" Margin="120,267,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="em_txt" HorizontalAlignment="Left" Height="23" Margin="247,267,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="163"/>
+        <Button x:Name="ck_bttn" Content="Generate Fields" HorizontalAlignment="Left" Margin="120,319,0,0" VerticalAlignment="Top" Width="99" Height="28"/>
 
 
     </Grid>
@@ -87,11 +92,31 @@ $WPFln_txt.add_textchanged({ Set-DisplayName $WPFln_txt $_ })
 # Function runs when the create user account button is clicked
 # The function sets a username based on the data already entered
 # once the username is generated, it is checked against active directory to ensure username doesn't already exist
-$WPFcu_bttn.add_click({
+
+# Button functionality to auto-generate missing fields
+$WPFck_bttn.add_click({
     if ($WPFmi_txt.Text) {
         $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
     } else {
         $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + "1"
+    }
+
+    # Generate common name and email address
+    $WPFcn_txt.Text = $WPFdp_txt.Text
+    $WPFem_txt.Text = $WPFun_txt.Text + '@lco.net'
+})
+
+# Button functionality to check account for duplicates and create the account
+$WPFcu_bttn.add_click({
+    $username = $WPFun_txt.Text
+    $account = Get-ADUser -Identity $username -credential $adm -ErrorAction SilentlyContinue
+    
+    # Check if account exists
+    if ($account)
+    {
+        [System.Windows.MessageBox]::Show("Account $username already exists")
+    } else {
+        [System.Windows.MessageBox]::Show("Account $username has been created")
     }
 })
 
