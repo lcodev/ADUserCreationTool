@@ -95,10 +95,24 @@ $WPFln_txt.add_textchanged({ Set-DisplayName $WPFln_txt $_ })
 
 # Button functionality to auto-generate missing fields
 $WPFck_bttn.add_click({
+
+    # Check if middle initial was provided
     if ($WPFmi_txt.Text) {
-        $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+        
+        # Check if last name is less than 5 characters long
+        if ($WPFln_txt.Text.Length -lt 5) {
+            $WPFun_txt.Text = $WPFln_txt.Text.tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+        } else {
+            $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+        }
+
     } else {
-        $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + "1"
+
+        if ($WPFln_txt.Text.Length -lt 5) {
+            $WPFun_txt.Text = $WPFln_txt.Text.tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+        else {
+            $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + "1"
+        }
     }
 
     # Generate common name and email address
