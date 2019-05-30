@@ -18,7 +18,7 @@ $xaml = @"
         <TextBox x:Name="un_txt" HorizontalAlignment="Left" Height="23" Margin="120,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label x:Name="dp_lbl" Content="Display Name:" HorizontalAlignment="Left" Margin="247,182,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="dp_txt" HorizontalAlignment="Left" Height="23" Margin="247,208,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="163"/>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="73" Margin="133,39,0,0" VerticalAlignment="Top" Width="71" Source="C:\Users\lco\Google Drive\PowerShell\guiapps\images\ps.png"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="73" Margin="133,39,0,0" VerticalAlignment="Top" Width="71" Source="C:\Users\luper\GitRepo\ADUserCreationTool\ps.png"/>
         <Label x:Name="main_lbl" Content="User Creation Form" HorizontalAlignment="Left" Margin="222,61,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
         <Button x:Name="cu_bttn" Content="Create User Account" HorizontalAlignment="Left" Margin="290,319,0,0" VerticalAlignment="Top" Width="120" Height="28"/>
         <Label x:Name="cn_lbl" Content="CN/Common Name:" HorizontalAlignment="Left" Margin="120,236,0,0" VerticalAlignment="Top"/>
