@@ -77,79 +77,82 @@ Get-FormVariables
 #$WPFem_txt.Text = '@lco.net'
 # Function Sets the display name as the user enters their first name, middle initial and last name
 # Middle initial is only displayed if data exists
-function Set-DisplayName
-{
+function Set-DisplayName {
     if ($WPFmi_txt.Text) {
         $WPFdp_txt.Text = $WPFln_txt.Text + ", " + $WPFfn_txt.Text + " " + $WPFmi_txt.Text + "."
-    } else {
+    }
+    else {
         $WPFdp_txt.Text = $WPFln_txt.Text + ", " + $WPFfn_txt.Text
     }
 }
-$WPFfn_txt.add_textchanged({ Set-DisplayName $WPFfn_txt $_ })
-$WPFmi_txt.add_textchanged({ Set-DisplayName $WPFmi_txt $_ })
-$WPFln_txt.add_textchanged({ Set-DisplayName $WPFln_txt $_ })
+$WPFfn_txt.add_textchanged( { Set-DisplayName $WPFfn_txt $_ })
+$WPFmi_txt.add_textchanged( { Set-DisplayName $WPFmi_txt $_ })
+$WPFln_txt.add_textchanged( { Set-DisplayName $WPFln_txt $_ })
 
 # Function runs when the create user account button is clicked
 # The function sets a username based on the data already entered
 # once the username is generated, it is checked against active directory to ensure username doesn't already exist
 
 # Button functionality to auto-generate missing fields
-$WPFck_bttn.add_click({
+$WPFck_bttn.add_click( {
 
-    # Check if middle initial was provided
-    if ($WPFmi_txt.Text) {
+        # Check if middle initial was provided
+        if ($WPFmi_txt.Text) {
         
-        # Check if last name is less than 5 characters long
-        if ($WPFln_txt.Text.Length -lt 5) {
-            $WPFun_txt.Text = $WPFln_txt.Text.tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
-        } else {
-            $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+            # Check if last name is less than 5 characters long
+            if ($WPFln_txt.Text.Length -lt 5) {
+                $WPFun_txt.Text = $WPFln_txt.Text.tolower() + $WPFfn_txt.Text.substring(0, 1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+            }
+            else {
+                $WPFun_txt.Text = $WPFln_txt.Text.substring(0, 5).tolower() + $WPFfn_txt.Text.substring(0, 1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+            }
+
         }
-
-    } else {
-
-        if ($WPFln_txt.Text.Length -lt 5) {
-            $WPFun_txt.Text = $WPFln_txt.Text.tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + $WPFmi_txt.Text.tolower() + "1"
         else {
-            $WPFun_txt.Text = $WPFln_txt.Text.substring(0,5).tolower() + $WPFfn_txt.Text.substring(0,1).tolower() + "1"
-        }
-    }
 
-    # Generate common name and email address
-    $WPFcn_txt.Text = $WPFdp_txt.Text
-    $WPFem_txt.Text = $WPFun_txt.Text + '@lco.net'
-})
+            if ($WPFln_txt.Text.Length -lt 5) {
+                $WPFun_txt.Text = $WPFln_txt.Text.tolower() + $WPFfn_txt.Text.substring(0, 1).tolower() + $WPFmi_txt.Text.tolower() + "1"
+            }
+            else {
+                $WPFun_txt.Text = $WPFln_txt.Text.substring(0, 5).tolower() + $WPFfn_txt.Text.substring(0, 1).tolower() + "1"
+            }
+        }
+
+        # Generate common name and email address
+        $WPFcn_txt.Text = $WPFdp_txt.Text
+        $WPFem_txt.Text = $WPFun_txt.Text + '@lco.net'
+    })
 
 # Button functionality to check account for duplicates and create the account
-$WPFcu_bttn.add_click({
-    $username = $WPFun_txt.Text
-    try {
-        $account = Get-ADUser -Identity $username -Credential $adm -ErrorAction SilentlyContinue
-    }
-    catch {
-        Write-Output "no user"
-    }
-    
-    # Check if account exists
-    if ($account)
-    {
-        [System.Windows.MessageBox]::Show("Account <$username> already exists!`nTry a different username.")
-    } else {
-        $default_password = ConvertTo-SecureString -String 'B33b0p@!' -AsPlainText -Force
-        $params = @{
-            Givenname           = $WPFfn_txt.Text
-            Surname             = $WPFln_txt.Text
-            Name                = $WPFcn_txt.Text
-            DisplayName         = $WPFdp_txt.Text
-            SamAccountName      = $WPFun_txt.Text
-            UserPrincipalName   = $WPFem_txt.Text
-            Enabled             = $true
-            AccountPassword     = $default_password
+$WPFcu_bttn.add_click( {
+        $username = $WPFun_txt.Text
+        try {
+            $account = Get-ADUser -Identity $username -Credential $adm -ErrorAction SilentlyContinue
         }
-        New-ADUser @params -Credential $adm
-        [System.Windows.MessageBox]::Show("Account <$username> has been created")
-    }
-})
+        catch {
+            Write-Output "no user"
+        }
+    
+        # Check if account exists
+        if ($account) {
+            [System.Windows.MessageBox]::Show("Account <$username> already exists!`nTry a different username.")
+        }
+        else {
+            $default_password = ConvertTo-SecureString -String 'B33b0p@!' -AsPlainText -Force
+            $params = @{
+                Givenname         = $WPFfn_txt.Text
+                Surname           = $WPFln_txt.Text
+                Name              = $WPFcn_txt.Text
+                DisplayName       = $WPFdp_txt.Text
+                SamAccountName    = $WPFun_txt.Text
+                UserPrincipalName = $WPFem_txt.Text
+                Enabled           = $true
+                AccountPassword   = $default_password
+            }
+            New-ADUser @params -Credential $adm
+            [System.Windows.MessageBox]::Show("Account <$username> has been created")
+        }
+    })
 
 
 #=====================================
